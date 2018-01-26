@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  </head>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<body>
+
+<div ng-app="myApp" ng-controller="myCtrl" class="col-md-8">
+ <table class="table table-striped" ng-table="tableParams">
+    <thead>
+      <tr>
+        <th>Id</th>
+        <th>Kurseid</th>
+        <th>Kursnamn</th>
+        <th>Period</th>
+        <th>Delete</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="Course in Courses | orderBy:'id'">
+        <td>{{Course.id}}</td>
+        <td><a href="/api/courses/{{Course._id}}">{{Course.courseId}}</a></td>
+        <td>{{Course.courseName}}</td>
+         <td>{{Course.coursePeriod}}</td>
+        <td><span class="glyphicon glyphicon-trash" style="cursor: pointer;" title="Delete" ng-click="deleteCourse(Course)"></span></td>
+      </tr>
+    </tbody>
+  </table>
+
+
+
+</div>
+
+<script>
+var app = angular.module('myApp', []);
+app.controller('myCtrl', function($scope, $http,$window) {
+//  $http.get("/api/courses")
+ // .then(function(response) {
+  //    $scope.Courses = response.data;
+ // });
+$scope.getCourses=function(){
+    $http.get("/api/courses")
+  .then(function(response) {
+      $scope.Courses = response.data;
+  });
+}
+$scope.getCourses();
+  $scope.deleteCourse=function(course){
+   $http.delete('/api/courses/'+course._id).then(function(response){
+       debugger;
+       alert(response.data.message);
+      $scope.getCourses();
+   });
+
+  }
+});
+</script>
+
+</body>
+</html>
+
